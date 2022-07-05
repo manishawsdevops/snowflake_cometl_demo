@@ -1,0 +1,43 @@
+# This pipeline will run the snowflake CICD.
+name: snowflake-cometl-cicd-demo
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'dbscripts/**'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  deploy-snowflake-changes-job:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      
+      - name: Use Python 3.8.x
+        uses: actions/setup-python@v4
+        with: 
+          python-version: '3.8.x'
+          
+      - name: Run SchemaChange
+        env:
+          SF_ACCOUNT: ${{ secrets.SF_ACCOUNT }}
+          SF_USERNAME: ${{ secrets.SF_USERNAME }}
+          SNOWFLAKE_PASSWORD: ${{ secrets.SF_PASSWORD }}
+          SF_ROLE: ${{ secrets.SF_ROLE }}
+          SF_DATABASE: ${{ secrets.SF_DATABASE }}
+          SF_DATAWAREHOUSE: ${{ secrets.SF_WAREHOUSE }}  
+        run: |
+          echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
+          python --version
+          echo "Step1:  Installing SchemaChange"
+          pip install schemachange
+          echo "Step2: Run Schemachange"
+          schemachange -f $GITHUB_WORKSPACE/dbscripts -a $SF_ACCOUNT -u $SF_USERNAME -r $SF_ROLE -w $SF_DATAWAREHOUSE -d $SF_DATABASE -c $SF_DATABASE.SCHEMACHANGE.CHANGE_HISTORY --create-change-history-table -v

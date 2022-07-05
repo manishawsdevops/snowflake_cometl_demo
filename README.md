@@ -1,1 +1,1 @@
-# snowflake_cometl_demo
+# snowflakecicd
