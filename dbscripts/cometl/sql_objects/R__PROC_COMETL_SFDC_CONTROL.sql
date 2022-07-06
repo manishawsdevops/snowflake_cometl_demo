@@ -11,7 +11,7 @@ EXECUTE AS OWNER
 AS ' 
  try 
 	{
-		snowflake.execute({ sqlText: "Begin Transaction;"});
+		snowflake.execute({ sqlText: "Begin Tx;"});
 		var v_return_value="";
 		v_return_value += "\\n P_APPLICATION_NAME: " + P_APPLICATION_NAME;
 		v_return_value += "\\n P_SUBJECT_AREA_NAME: " + P_SUBJECT_AREA_NAME;
