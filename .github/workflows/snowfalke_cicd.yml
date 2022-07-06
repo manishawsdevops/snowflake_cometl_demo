@@ -7,7 +7,7 @@ on:
   push:
     branches: [ "main" ]
     paths:
-      - 'dbscripts/**'
+      - 'manish/**'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
